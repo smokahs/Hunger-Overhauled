@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "entries": [
+    "hungeroverhauled:crop_drops",
+    "hungeroverhauled:grass_seeds",
+    "hungeroverhauled:chest_food"
+  ]
+}

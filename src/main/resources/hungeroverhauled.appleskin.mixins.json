@@ -1,0 +1,16 @@
+{
+  "required": false,
+  "minVersion": "0.8.5",
+  "package": "io.github.smokahs.hungeroverhauled.mixin.appleskin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "hungeroverhauled.refmap.json",
+  "mixins": [],
+  "client": [
+    "FoodHelperMixin",
+    "HungerHelperMixin"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    { "id": "#forge:tools/knives", "required": false },
+    { "id": "#farmersdelight:tools/knives", "required": false },
+    { "id": "#forge:tools/knife", "required": false },
+    { "id": "#forge:tools/butchery_knife", "required": false },
+    { "id": "#gtceu:tools/knife", "required": false },
+    { "id": "#gtceu:tools/butchery_knife", "required": false }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "effect.hungeroverhauled.well_fed": "Well Fed",
+
+  "hungeroverhauled.tooltip.meal.crop_grows_best_in": "Grows best in:",
+  "hungeroverhauled.tooltip.meal.hearty": "hearty %s",
+  "hungeroverhauled.tooltip.meal.wholesome": "wholesome %s",
+  "hungeroverhauled.tooltip.meal.nourishing": "nourishing %s",
+  "hungeroverhauled.tooltip.meal.unfulfilling": "unfulfilling %s",
+  "hungeroverhauled.tooltip.meal.morsel": "morsel",
+  "hungeroverhauled.tooltip.meal.snack": "snack",
+  "hungeroverhauled.tooltip.meal.lightmeal": "light meal",
+  "hungeroverhauled.tooltip.meal.meal": "meal",
+  "hungeroverhauled.tooltip.meal.largemeal": "large meal",
+  "hungeroverhauled.tooltip.meal.feast": "feast",
+
+  "hungeroverhauled.ui.health.dying": "Dying",
+  "hungeroverhauled.ui.health.injured": "Injured",
+  "hungeroverhauled.ui.health.hurt": "Hurt",
+  "hungeroverhauled.ui.hunger.starving": "Starving",
+  "hungeroverhauled.ui.hunger.hungry": "Hungry",
+  "hungeroverhauled.ui.hunger.peckish": "Peckish"
+}

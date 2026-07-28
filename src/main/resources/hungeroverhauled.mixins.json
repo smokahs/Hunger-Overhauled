@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "io.github.smokahs.hungeroverhauled.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "hungeroverhauled.refmap.json",
+  "mixins": [
+    "CropBlockAccessor",
+    "FoodDataMixin",
+    "ItemAccessor",
+    "RecipeManagerMixin",
+    "StructureTemplatePoolAccessor"
+  ],
+  "client": [],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

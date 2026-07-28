@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:wheat_seeds",
+    "minecraft:beetroot_seeds",
+    "minecraft:melon_seeds",
+    "minecraft:pumpkin_seeds",
+    { "id": "minecraft:torchflower_seeds", "required": false },
+    { "id": "farmersdelight:cabbage_seeds", "required": false },
+    { "id": "farmersdelight:tomato_seeds", "required": false },
+    { "id": "farmersdelight:rice", "required": false },
+    { "id": "#croptopia:seeds", "required": false },
+    { "id": "#pamhc2crops:seeds", "required": false },
+    { "id": "#forge:seeds", "required": false }
+  ]
+}
