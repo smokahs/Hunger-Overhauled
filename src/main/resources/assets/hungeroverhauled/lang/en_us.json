@@ -2,7 +2,6 @@
   "effect.hungeroverhauled.well_fed": "Well Fed",
 
   "item.hungeroverhauled.healing_axe": "Healing Axe",
-  "item.hungeroverhauled.healing_axe.durability": "Durability: ∞",
   "item.hungeroverhauled.healing_axe.hint": "[Hold SHIFT for info]",
   "item.hungeroverhauled.healing_axe.passive": "Passive: ",
   "item.hungeroverhauled.healing_axe.passive.desc": "Restores hunger when held",

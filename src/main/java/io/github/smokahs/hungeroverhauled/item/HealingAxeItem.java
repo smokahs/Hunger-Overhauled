@@ -122,8 +122,6 @@ public class HealingAxeItem extends AxeItem {
     // only ever called while a tooltip is being drawn, so the client-only shift check is safe here
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable(TOOLTIP + "durability").withStyle(ChatFormatting.GRAY));
-
         if (!Screen.hasShiftDown()) {
             tooltip.add(Component.translatable(TOOLTIP + "hint").withStyle(ChatFormatting.DARK_GRAY));
             return;
