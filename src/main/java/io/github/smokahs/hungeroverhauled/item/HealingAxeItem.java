@@ -1,6 +1,14 @@
 package io.github.smokahs.hungeroverhauled.item;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -10,8 +18,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
+import io.github.smokahs.hungeroverhauled.HungerOverhauled;
 import io.github.smokahs.hungeroverhauled.mixin.ZombieVillagerAccessor;
 
 // extra utilities' healing axe, as it played in 1.7.10 new horizons. that means the base item plus the
@@ -36,6 +46,8 @@ public class HealingAxeItem extends AxeItem {
 
     // instant health, the potion the original pulled its particle colour from
     private static final int HEAL_PARTICLE_COLOR = 0xF82423;
+
+    private static final String TOOLTIP = "item." + HungerOverhauled.MOD_ID + ".healing_axe.";
 
     public HealingAxeItem(Properties properties) {
         // diamond is 1.7.10's EMERALD tier, and 2.0 puts the tooltip back on the 6 damage it showed there.
@@ -105,6 +117,29 @@ public class HealingAxeItem extends AxeItem {
     @Override
     public boolean isFoil(ItemStack stack) {
         return false;
+    }
+
+    // only ever called while a tooltip is being drawn, so the client-only shift check is safe here
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        tooltip.add(Component.translatable(TOOLTIP + "durability").withStyle(ChatFormatting.GRAY));
+
+        if (!Screen.hasShiftDown()) {
+            tooltip.add(Component.translatable(TOOLTIP + "hint").withStyle(ChatFormatting.DARK_GRAY));
+            return;
+        }
+
+        tooltip.add(Component.empty());
+        tooltip.add(entry("passive", ChatFormatting.GOLD));
+        tooltip.add(Component.empty());
+        tooltip.add(entry("heal", ChatFormatting.GREEN));
+        tooltip.add(entry("cure", ChatFormatting.LIGHT_PURPLE));
+    }
+
+    // a coloured label with the description behind it, kept white so it does not inherit the label colour
+    private static MutableComponent entry(String key, ChatFormatting labelColor) {
+        return Component.translatable(TOOLTIP + key).withStyle(labelColor)
+                .append(Component.translatable(TOOLTIP + key + ".desc").withStyle(ChatFormatting.WHITE));
     }
 
     // setHealth while you would survive it, real damage otherwise, so a fatal swing is credited properly
