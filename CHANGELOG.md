@@ -10,7 +10,8 @@
     - New `healing axe` config section: `enableHealingAxe` and `enableHealingAxeRecipe` (both default off)
         - Recipe when enabled: netherite ingot + nether star over netherite ingot + stick over stick
         - The item is always registered so worlds holding one keep loading; the toggle only decides whether it is reachable
-2. Reworked the GTNH preset (`setToNewHorizonsDefaults`)
+2. Fixed hunger refilling itself on peaceful
+3. Reworked the GTNH preset (`setToNewHorizonsDefaults`)
     - New Horizons values are now written straight into the config file, so the options you see in the file or the config GUI are the real ones
     - Applies on reload as well as load, so flipping the toggle takes hold without a restart
     - Dropped the `newhorizons_backup.json` side file and its restore path
