@@ -9,7 +9,8 @@
     "FoodDataMixin",
     "ItemAccessor",
     "RecipeManagerMixin",
-    "StructureTemplatePoolAccessor"
+    "StructureTemplatePoolAccessor",
+    "ZombieVillagerAccessor"
   ],
   "client": [],
   "server": [],

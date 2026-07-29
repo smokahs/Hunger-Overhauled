@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "XN",
+    "XS",
+    " S"
+  ],
+  "key": {
+    "X": { "item": "minecraft:netherite_ingot" },
+    "N": { "item": "minecraft:nether_star" },
+    "S": { "item": "minecraft:stick" }
+  },
+  "result": {
+    "item": "hungeroverhauled:healing_axe",
+    "count": 1
+  }
+}

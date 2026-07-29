@@ -1,6 +1,8 @@
 {
   "effect.hungeroverhauled.well_fed": "Well Fed",
 
+  "item.hungeroverhauled.healing_axe": "Healing Axe",
+
   "hungeroverhauled.tooltip.meal.crop_grows_best_in": "Grows best in:",
   "hungeroverhauled.tooltip.meal.hearty": "hearty %s",
   "hungeroverhauled.tooltip.meal.wholesome": "wholesome %s",

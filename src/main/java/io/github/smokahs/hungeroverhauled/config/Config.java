@@ -142,6 +142,10 @@ public final class Config {
     // recipes
     public static List<? extends String> removedRecipes;
 
+    // healing axe
+    public static boolean enableHealingAxe;
+    public static boolean enableHealingAxeRecipe;
+
     // gtnh
     public static boolean setToNewHorizonsDefaults;
     public static boolean explodeInhumaneKills;
@@ -266,6 +270,9 @@ public final class Config {
         lowHealthRegenRateModifier = c.lowHealthRegenRateModifier.get();
 
         removedRecipes = c.removedRecipes.get();
+
+        enableHealingAxe = c.enableHealingAxe.get();
+        enableHealingAxeRecipe = c.enableHealingAxeRecipe.get() && enableHealingAxe;
 
         setToNewHorizonsDefaults = c.setToNewHorizonsDefaults.get();
         explodeInhumaneKills = c.explodeInhumaneKills.get();
@@ -392,6 +399,10 @@ public final class Config {
 
         // recipes
         final ForgeConfigSpec.ConfigValue<List<? extends String>> removedRecipes;
+
+        // healing axe
+        final ForgeConfigSpec.BooleanValue enableHealingAxe;
+        final ForgeConfigSpec.BooleanValue enableHealingAxeRecipe;
 
         // gtnh
         final ForgeConfigSpec.BooleanValue setToNewHorizonsDefaults;
@@ -692,6 +703,22 @@ public final class Config {
                     .comment("Recipe ids removed from the game on world load. Supports '*' as a trailing wildcard.",
                             "Wood and stone hoes are handled by 'removeHoeRecipes' and do not need an entry here.")
                     .defineList("removedRecipes", Arrays.asList(new String[0]), o -> o instanceof String);
+            b.pop();
+
+            b.comment("Extra Utilities' healing axe, ported from the 1.7.10 New Horizons era.",
+                    "Left click a mob to heal it 4 health for 3.5 of your own, or to hit an undead one for 16.",
+                    "Left clicking a zombie villager cures it on the spot. Holding the axe feeds you slowly,",
+                    "but every swing costs 10 exhaustion, so swinging it is not free food.",
+                    "The axe never wears out and never lands a normal hit.").push("healing axe");
+            enableHealingAxe = b
+                    .comment("Puts the healing axe in the creative tabs and recipe viewers.",
+                            "The item is always registered so worlds holding one keep loading; this only",
+                            "decides whether it is reachable. Takes a restart to show up.")
+                    .define("enableHealingAxe", false);
+            enableHealingAxeRecipe = b
+                    .comment("Adds a crafting recipe for the axe: netherite ingot + nether star over",
+                            "netherite ingot + stick over stick ('enableHealingAxe' must be true)")
+                    .define("enableHealingAxeRecipe", false);
             b.pop();
 
             b.comment("Settings borrowed from GregTech: New Horizons").push("GTNH");

@@ -32,6 +32,10 @@ public final class RecipeFilter {
             patterns.add(HungerOverhauled.MOD_ID + ":wheat_seeds_from_wheat");
         }
 
+        if (!Config.enableHealingAxe || !Config.enableHealingAxeRecipe) {
+            patterns.add(HungerOverhauled.MOD_ID + ":healing_axe");
+        }
+
         if (Config.removedRecipes != null) {
             patterns.addAll(Config.removedRecipes);
         }

@@ -21,6 +21,7 @@ import io.github.smokahs.hungeroverhauled.food.FoodModifier;
 import io.github.smokahs.hungeroverhauled.food.FoodOverrides;
 import io.github.smokahs.hungeroverhauled.growth.GrowthDefaults;
 import io.github.smokahs.hungeroverhauled.registry.ModEffects;
+import io.github.smokahs.hungeroverhauled.registry.ModItems;
 import io.github.smokahs.hungeroverhauled.registry.ModLootModifiers;
 import io.github.smokahs.hungeroverhauled.registry.ModProcessors;
 import org.slf4j.Logger;
@@ -36,6 +37,7 @@ public class HungerOverhauled {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModEffects.register(modBus);
+        ModItems.register(modBus);
         ModLootModifiers.register(modBus);
         ModProcessors.register(modBus);
 

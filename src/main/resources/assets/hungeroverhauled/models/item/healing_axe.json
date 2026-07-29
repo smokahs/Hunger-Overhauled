@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "hungeroverhauled:item/healing_axe",
+    "layer1": "hungeroverhauled:item/healing_axe_overlay"
+  }
+}
