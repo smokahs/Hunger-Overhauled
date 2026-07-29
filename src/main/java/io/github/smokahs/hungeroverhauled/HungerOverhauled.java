@@ -42,6 +42,7 @@ public class HungerOverhauled {
         ModProcessors.register(modBus);
 
         modBus.addListener(Config::onLoad);
+        modBus.addListener(Config::onReload);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.COMMON_SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);

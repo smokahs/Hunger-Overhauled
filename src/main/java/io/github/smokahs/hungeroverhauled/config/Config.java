@@ -8,6 +8,8 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import static io.github.smokahs.hungeroverhauled.config.NewHorizonsPreset.preset;
+
 // all the old 1.12 options, baked into plain fields since they get read every tick
 public final class Config {
 
@@ -159,10 +161,19 @@ public final class Config {
     public static boolean addFoodTooltips;
     public static boolean addGrowsBestInTooltips;
 
-    public static void onLoad(final ModConfigEvent event) {
+    public static void onLoad(final ModConfigEvent.Loading event) {
+        sync(event);
+    }
+
+    // fires whenever the file changes on disk, which is how a config gui edit reaches us
+    public static void onReload(final ModConfigEvent.Reloading event) {
+        sync(event);
+    }
+
+    private static void sync(final ModConfigEvent event) {
         if (event.getConfig().getSpec() == COMMON_SPEC) {
             // may rewrite options, so it has to run before we bake them
-            NewHorizonsPreset.sync();
+            NewHorizonsPreset.apply();
             bakeCommon();
         } else if (event.getConfig().getSpec() == CLIENT_SPEC) {
             bakeClient();
@@ -423,63 +434,63 @@ public final class Config {
             modifyHoeUse = b
                     .comment("Changes the use of hoes depending on the availability of water")
                     .define("modifyHoeUse", true);
-            removeHoeRecipes = b
+            removeHoeRecipes = preset(b
                     .comment("Whether wood and stone hoe recipes are removed")
-                    .define("removeHoeRecipes", true);
+                    .define("removeHoeRecipes", true), false);
             hoeToolDamageMultiplier = b
                     .comment("Multiplier on tool damage taken when a hoe is used ('modifyHoeUse' must be true)")
                     .defineInRange("hoeToolDamageMultiplier", 5, 1, Integer.MAX_VALUE);
-            seedChance = b
+            seedChance = preset(b
                     .comment("Percent chance for a seed to drop from hoe use on normal difficulty ('modifyHoeUse' must be true)")
-                    .defineInRange("seedChance", 20, 0, 100);
+                    .defineInRange("seedChance", 20, 0, 100), 25);
             addSeedsCraftingRecipe = b
                     .comment("Adds a crafting recipe to turn 1 wheat into 1 seed")
                     .define("addSeedsCraftingRecipe", true);
             b.pop();
 
             b.comment("Delays for various food-related activities").push("delays");
-            noSunlightRegrowthMultiplier = b
+            noSunlightRegrowthMultiplier = preset(b
                     .comment("Multiplier on crop growth time without sunlight (1 to disable, 0 to make crops only grow in sunlight)")
-                    .defineInRange("noSunlightRegrowthMultiplier", 2.0D, 0.0D, Double.MAX_VALUE);
-            wrongBiomeRegrowthMultiplier = b
+                    .defineInRange("noSunlightRegrowthMultiplier", 2.0D, 0.0D, Double.MAX_VALUE), 1.0D);
+            wrongBiomeRegrowthMultiplier = preset(b
                     .comment("Multiplier on crop growth time (except sugarcane) in the wrong biome (1 to disable, 0 to only grow in the correct biome)")
-                    .defineInRange("wrongBiomeRegrowthMultiplier", 2.0D, 0.0D, Double.MAX_VALUE);
-            wrongBiomeRegrowthMultiplierSugarcane = b
+                    .defineInRange("wrongBiomeRegrowthMultiplier", 2.0D, 0.0D, Double.MAX_VALUE), 1.0D);
+            wrongBiomeRegrowthMultiplierSugarcane = preset(b
                     .comment("Multiplier on sugarcane growth time in the wrong biome (1 to disable, 0 to only grow in the correct biome)")
-                    .defineInRange("wrongBiomeRegrowthMultiplierSugarcane", 2.0D, 0.0D, Double.MAX_VALUE);
+                    .defineInRange("wrongBiomeRegrowthMultiplierSugarcane", 2.0D, 0.0D, Double.MAX_VALUE), 1.0D);
             flowerRegrowthMultiplier = b
                     .comment("Multiplier on the time it takes a flower crop to grow")
                     .defineInRange("flowerRegrowthMultiplier", 1.0D, 0.0D, Double.MAX_VALUE);
-            cropRegrowthMultiplier = b
+            cropRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes a non-tree crop to grow")
-                    .defineInRange("cropRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            cactusRegrowthMultiplier = b
+                    .defineInRange("cropRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            cactusRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes cactus to grow")
-                    .defineInRange("cactusRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            cocoaRegrowthMultiplier = b
+                    .defineInRange("cactusRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            cocoaRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes cocoa to grow")
-                    .defineInRange("cocoaRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            sugarcaneRegrowthMultiplier = b
+                    .defineInRange("cocoaRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            sugarcaneRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes sugarcane to grow")
-                    .defineInRange("sugarcaneRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            treeCropRegrowthMultiplier = b
+                    .defineInRange("sugarcaneRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            treeCropRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes a tree crop (fruit on a log/leaf block) to grow")
-                    .defineInRange("treeCropRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            saplingRegrowthMultiplier = b
+                    .defineInRange("treeCropRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            saplingRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes a sapling to grow into a tree")
-                    .defineInRange("saplingRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            netherWartRegrowthMultiplier = b
+                    .defineInRange("saplingRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            netherWartRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes nether wart to grow")
-                    .defineInRange("netherWartRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            eggTimeoutMultiplier = b
+                    .defineInRange("netherWartRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            eggTimeoutMultiplier = preset(b
                     .comment("Multiplier applied to the delay between chicken egg laying")
-                    .defineInRange("eggTimeoutMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            breedingTimeoutMultiplier = b
+                    .defineInRange("eggTimeoutMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            breedingTimeoutMultiplier = preset(b
                     .comment("Multiplier applied to the delay between breeding entities")
-                    .defineInRange("breedingTimeoutMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
-            childDurationMultiplier = b
+                    .defineInRange("breedingTimeoutMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+            childDurationMultiplier = preset(b
                     .comment("Multiplier applied to the delay before children become adults")
-                    .defineInRange("childDurationMultiplier", 4.0D, 0.0D, Double.MAX_VALUE);
+                    .defineInRange("childDurationMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
             milkedTimeout = b
                     .comment("Delay (in minutes) after milking a cow before it can be milked again (0 to disable)")
                     .defineInRange("milkedTimeout", 20, 0, Integer.MAX_VALUE);
@@ -519,9 +530,9 @@ public final class Config {
             producePerHarvestBreakMax = b
                     .comment("Maximum produce from harvesting a non-tree crop by breaking it")
                     .defineInRange("producePerHarvestBreakMax", 4, 0, Integer.MAX_VALUE);
-            bonemealEffectiveness = b
+            bonemealEffectiveness = preset(b
                     .comment("Multiplier on the effectiveness of bonemeal; the smaller this is, the more often bonemeal fails. Set to 0 to disable bonemeal completely.")
-                    .defineInRange("bonemealEffectiveness", 0.5D, 0.0D, 1.0D);
+                    .defineInRange("bonemealEffectiveness", 0.5D, 0.0D, 1.0D), 1.0D);
             modifyBonemealGrowth = b
                     .comment("Reduces the amount of growth from a successful bonemeal on certain plants (uses IguanaMan's opinionated values)")
                     .define("modifyBonemealGrowth", true);
@@ -570,18 +581,18 @@ public final class Config {
             useHOFoodValues = b
                     .comment("Enables Hunger Overhauled manually setting food values for vanilla items and anything listed in config/hungeroverhauled/*.json ('modifyFoodValues' must be true)")
                     .define("useHOFoodValues", true);
-            modifyFoodStackSize = b
+            modifyFoodStackSize = preset(b
                     .comment("Changes the stack size of food to depend on the food's replenishment value")
-                    .define("modifyFoodStackSize", true);
-            modifyFoodEatingSpeed = b
+                    .define("modifyFoodStackSize", true), false);
+            modifyFoodEatingSpeed = preset(b
                     .comment("Changes the eating animation speed to depend on the food's replenishment value")
-                    .define("modifyFoodEatingSpeed", true);
+                    .define("modifyFoodEatingSpeed", true), false);
             foodStackSizeMultiplier = b
                     .comment("Multiplier on the stack size of food ('modifyFoodStackSize' must be true)")
                     .defineInRange("foodStackSizeMultiplier", 1, 1, 64);
-            foodHungerDivider = b
+            foodHungerDivider = preset(b
                     .comment("Food values not manually set (see 'useHOFoodValues') have their hunger value divided by this ('modifyFoodValues' must be true)")
-                    .defineInRange("foodHungerDivider", 4.0D, 1.0D, Double.MAX_VALUE);
+                    .defineInRange("foodHungerDivider", 4.0D, 1.0D, Double.MAX_VALUE), 2.0D);
             foodSaturationDivider = b
                     .comment("Food values not manually set have their saturation modifier divided by this.",
                             "Note: applied after 'foodHungerToSaturationDivider'")
@@ -610,9 +621,9 @@ public final class Config {
             b.pop();
 
             b.comment("Adding food to villager trades and chest loot").push("trades and loot");
-            addTradesButcher = b
+            addTradesButcher = preset(b
                     .comment("Add high tier foods to the items butcher villagers will sell")
-                    .define("addTradesButcher", true);
+                    .define("addTradesButcher", true), false);
             addCropTradesFarmer = b
                     .comment("Add crop produce to the items farmer villagers will buy")
                     .define("addCropTradesFarmer", true);
@@ -622,9 +633,9 @@ public final class Config {
             addFoodChestLoot = b
                     .comment("High tier food added to dungeon/mineshaft/temple chests")
                     .define("addFoodChestLoot", true);
-            chestLootMaxStackSize = b
+            chestLootMaxStackSize = preset(b
                     .comment("Max stack size for food found in chests ('addFoodChestLoot' must be true)")
-                    .defineInRange("chestLootMaxStackSize", 16, 1, 64);
+                    .defineInRange("chestLootMaxStackSize", 16, 1, 64), 32);
             chestLootChance = b
                     .comment("Chance for food to be found in a chest ('addFoodChestLoot' must be true)")
                     .defineInRange("chestLootChance", 0.25D, 0.0D, 1.0D);
@@ -640,12 +651,12 @@ public final class Config {
             b.pop();
 
             b.comment("Options related to hunger").push("hunger");
-            constantHungerLoss = b
+            constantHungerLoss = preset(b
                     .comment("You lose hunger (very slowly) at all times")
-                    .define("constantHungerLoss", true);
-            damageOnStarve = b
+                    .define("constantHungerLoss", true), false);
+            damageOnStarve = preset(b
                     .comment("Amount of damage you take when hunger hits zero (vanilla is 1)")
-                    .defineInRange("damageOnStarve", 200, 1, Integer.MAX_VALUE);
+                    .defineInRange("damageOnStarve", 200, 1, Integer.MAX_VALUE), 2);
             enableRespawnHunger = b
                     .comment("Enable setting hunger after respawning (see 'respawnHungerValue')")
                     .define("enableRespawnHunger", true);
@@ -658,9 +669,9 @@ public final class Config {
             disableHealingHungerDrain = b
                     .comment("Disable the hunger drain when healing that was introduced in vanilla 1.6.2")
                     .define("disableHealingHungerDrain", true);
-            hungerLossRatePercentage = b
+            hungerLossRatePercentage = preset(b
                     .comment("Speed up or slow down the rate that hunger drops (set to 0 to disable hunger loss entirely)")
-                    .defineInRange("hungerLossRatePercentage", 400.0D / 3.0D, 0.0D, Double.MAX_VALUE);
+                    .defineInRange("hungerLossRatePercentage", 400.0D / 3.0D, 0.0D, Double.MAX_VALUE), 100.0D);
             b.pop();
 
             b.comment("Options for how to handle the player getting low health/hunger").push("low stats");
@@ -678,9 +689,9 @@ public final class Config {
             b.pop();
 
             b.comment("Options related to health").push("health");
-            minHungerToHeal = b
+            minHungerToHeal = preset(b
                     .comment("Minimum hunger level before healing starts (vanilla is 18)")
-                    .defineInRange("minHungerToHeal", 7, 0, 20);
+                    .defineInRange("minHungerToHeal", 7, 0, 20), 8);
             foodRegensHealth = b
                     .comment("Eating food regenerates health")
                     .define("foodRegensHealth", false);
@@ -723,14 +734,7 @@ public final class Config {
 
             b.comment("Settings borrowed from GregTech: New Horizons").push("GTNH");
             setToNewHorizonsDefaults = b
-                    .comment("Swaps this config over to the values the New Horizons pack ships.",
-                            "Turning it on saves whatever you had first, so turning it off again puts your own",
-                            "numbers back exactly as they were.",
-                            "Careful: these are softer than our defaults, not harder. Crops grow twice as fast,",
-                            "food is halved instead of quartered, and starving does 2 damage instead of 200.",
-                            "New Horizons does that on purpose because Spice of Life carries the food difficulty",
-                            "over there, so only use this preset if you run Spice of Life too. On its own it",
-                            "just makes the game easier.")
+                    .comment("Rewrites config values to gtnh defaults")
                     .define("setToNewHorizonsDefaults", false);
             explodeInhumaneKills = b
                     .comment("Animals have a small chance to explode when not slaughtered humanely (with a knife!).",
