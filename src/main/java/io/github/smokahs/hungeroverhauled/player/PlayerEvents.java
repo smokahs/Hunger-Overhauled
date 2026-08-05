@@ -10,8 +10,10 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,8 +28,16 @@ public final class PlayerEvents {
     // the 1.12 version stored a countdown in NBT to run this every 10 ticks
     private static final int CHECK_INTERVAL = 10;
 
-    // where each player's walk distance was at the last check
+    // where each player's walk distance was at the last tick
     private static final Map<Player, Float> LAST_WALK_DIST = new WeakHashMap<>();
+
+    // 1.9 nerfed nearly every exhaustion source, these top vanilla back up to the 1.7.10 costs
+    private static final float OLD_SWIM_TOPUP_PER_BLOCK = 0.005F;
+    private static final float OLD_JUMP_TOPUP = 0.15F;
+    private static final float OLD_SPRINT_JUMP_TOPUP = 0.6F;
+    private static final float OLD_HIT_TOPUP = 0.2F;
+    private static final float OLD_MINE_TOPUP = 0.02F;
+    private static final float OLD_HUNGER_EFFECT_TOPUP_PER_CHECK = 0.2F;
 
     private PlayerEvents() {
     }
@@ -40,7 +50,13 @@ public final class PlayerEvents {
             return;
         }
 
-        if (player.tickCount % CHECK_INTERVAL != 0 || player.isDeadOrDying()) {
+        if (player.isDeadOrDying()) {
+            return;
+        }
+
+        trackMovement(player);
+
+        if (player.tickCount % CHECK_INTERVAL != 0) {
             return;
         }
 
@@ -52,7 +68,13 @@ public final class PlayerEvents {
             player.causeFoodExhaustion(0.01F);
         }
 
-        applyWalkExhaustion(player);
+        if (Config.restoreOldExhaustionCosts) {
+            MobEffectInstance hunger = player.getEffect(MobEffects.HUNGER);
+
+            if (hunger != null) {
+                player.causeFoodExhaustion(OLD_HUNGER_EFFECT_TOPUP_PER_CHECK * (hunger.getAmplifier() + 1));
+            }
+        }
 
         if (!Config.addLowStatEffects) {
             return;
@@ -80,24 +102,53 @@ public final class PlayerEvents {
         }
     }
 
-    // walking was free since vanilla 1.11, this brings back the old cost
-    private static void applyWalkExhaustion(Player player) {
+    // walking was free since vanilla 1.11, this brings back the old cost;
+    // runs every tick so airborne stretches inside a 10 tick window are not thrown away
+    private static void trackMovement(Player player) {
         float walked = player.walkDist;
         Float last = LAST_WALK_DIST.put(player, walked);
 
-        if (last == null || Config.walkExhaustionPerBlock <= 0.0F) {
+        if (last == null) {
             return;
         }
 
         float delta = walked - last;
 
-        // sprinting and swimming already cost hunger, riding and flying are free
-        if (delta <= 0.0F || !player.onGround() || player.isSprinting() || player.isSwimming()
+        if (delta <= 0.0F || player.isCreative() || player.isSpectator()
                 || player.isPassenger() || player.getAbilities().flying) {
             return;
         }
 
-        player.causeFoodExhaustion(delta * Config.walkExhaustionPerBlock);
+        // sprinting kept its full vanilla cost through 1.9, nothing to top up
+        if (player.isSprinting()) {
+            return;
+        }
+
+        if (player.isInWater()) {
+            if (Config.restoreOldExhaustionCosts) {
+                player.causeFoodExhaustion(delta * OLD_SWIM_TOPUP_PER_BLOCK);
+            }
+        } else if (player.onGround() && Config.walkExhaustionPerBlock > 0.0F) {
+            player.causeFoodExhaustion(delta * Config.walkExhaustionPerBlock);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onJump(LivingEvent.LivingJumpEvent event) {
+        if (!Config.restoreOldExhaustionCosts || event.getEntity().level().isClientSide()) {
+            return;
+        }
+
+        if (event.getEntity() instanceof Player player) {
+            player.causeFoodExhaustion(player.isSprinting() ? OLD_SPRINT_JUMP_TOPUP : OLD_JUMP_TOPUP);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
+        if (Config.restoreOldExhaustionCosts) {
+            event.getPlayer().causeFoodExhaustion(OLD_MINE_TOPUP);
+        }
     }
 
     private static void applySlowness(Player player, float healthPercent, int foodLevel, int scale) {
@@ -194,11 +245,25 @@ public final class PlayerEvents {
         }
     }
 
-    // taking a hit restarts the regen timer, same as the 1.12 version did through AppleCore
     @SubscribeEvent
     public static void onHurt(LivingHurtEvent event) {
         if (event.getEntity() instanceof Player player) {
-            ((FoodDataAccess) player.getFoodData()).hungeroverhauled$setTickTimer(0);
+            // taking a hit restarts the regen timer, same as the 1.12 version did through AppleCore;
+            // never while starving, the same timer runs the 80 tick starve clock
+            if (player.getFoodData().getFoodLevel() > 0) {
+                ((FoodDataAccess) player.getFoodData()).hungeroverhauled$setTickTimer(0);
+            }
+
+            // only sources vanilla still charges for get topped up, fall and burn ticks stay free
+            if (Config.restoreOldExhaustionCosts && event.getSource().getFoodExhaustion() > 0.0F) {
+                player.causeFoodExhaustion(OLD_HIT_TOPUP);
+            }
+        }
+
+        if (Config.restoreOldExhaustionCosts
+                && event.getSource().getDirectEntity() instanceof Player attacker
+                && !attacker.level().isClientSide()) {
+            attacker.causeFoodExhaustion(OLD_HIT_TOPUP);
         }
     }
 }

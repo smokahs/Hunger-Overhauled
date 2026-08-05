@@ -9,6 +9,19 @@
     - New `disableFastRegen` option in the `health` section (default off, GTNH preset turns it on)
 3. The onscreen status text can be moved
     - New client options: `healthTextOffsetX/Y` and `hungerTextOffsetX/Y`, so each text moves on its own
+4. Pre-1.9 exhaustion is back
+    - Vanilla 1.9 hunger cost 3-5x: jumps 0.2 -> 0.05, sprint jumps 0.8 -> 0.2, melee hits and damage taken 0.3 -> 0.1, mining 0.025 -> 0.005, swimming 0.015 -> 0.01, hunger effect 0.025 -> 0.005 per tick
+    - New `restoreOldExhaustionCosts` option in the `hunger` section (default on) tops vanilla back up to the old numbers
+5. The GTNH preset now nerfs golden foods like real GTNH does
+    - The preset clears `foodValueBlacklist`, so golden carrots drop from 6 hunger / 14.4 saturation to 2 / 0.4 and golden apples from 4 / 9.6 to 1 / 0.1
+6. Fixed getting hit delaying starvation
+    - The regen-restart-on-hurt timer doubled as the 80 tick starve clock, so mobs hitting a starving player postponed starve damage
+7. Walk exhaustion is tracked every tick instead of every 10
+    - Being mid-air when the old 10 tick check landed used to throw away the whole window's distance
+8. Config reorganized into six top-level groups
+    - `farming` (getting seeds / delays / harvesting / custom field), `food` (+ trades and loot), `player` (hunger / low stats / health), `difficulty scaling`, `misc` (recipes / healing axe), `GTNH`
+    - Option names unchanged, so the 1.12 reference still applies; old config files migrate themselves on first launch
+9. The GTNH preset now turns on exploding animals (`explodeInhumaneKills`)
 
 ## v2.1
 1. Added the **Healing Axe**, ported from the 1.7.10 Extra Utilities / New Horizons era

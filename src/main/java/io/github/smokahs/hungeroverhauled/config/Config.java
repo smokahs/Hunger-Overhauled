@@ -116,6 +116,7 @@ public final class Config {
     // hunger
     public static boolean constantHungerLoss;
     public static float walkExhaustionPerBlock;
+    public static boolean restoreOldExhaustionCosts;
     public static int damageOnStarve;
     public static boolean enableRespawnHunger;
     public static int respawnHungerValue;
@@ -263,6 +264,7 @@ public final class Config {
 
         constantHungerLoss = c.constantHungerLoss.get();
         walkExhaustionPerBlock = c.walkExhaustionPerBlock.get().floatValue();
+        restoreOldExhaustionCosts = c.restoreOldExhaustionCosts.get();
         damageOnStarve = c.damageOnStarve.get();
         enableRespawnHunger = c.enableRespawnHunger.get();
         respawnHungerValue = c.respawnHungerValue.get();
@@ -395,6 +397,7 @@ public final class Config {
         // hunger
         final ForgeConfigSpec.BooleanValue constantHungerLoss;
         final ForgeConfigSpec.DoubleValue walkExhaustionPerBlock;
+        final ForgeConfigSpec.BooleanValue restoreOldExhaustionCosts;
         final ForgeConfigSpec.IntValue damageOnStarve;
         final ForgeConfigSpec.BooleanValue enableRespawnHunger;
         final ForgeConfigSpec.IntValue respawnHungerValue;
@@ -438,6 +441,8 @@ public final class Config {
         final ForgeConfigSpec.BooleanValue inhumaneKillDestroysDrops;
 
         Common(ForgeConfigSpec.Builder b) {
+            b.comment("Farming: seeds, growth speed, harvesting and village fields").push("farming");
+
             b.comment("Options for obtaining seeds").push("getting seeds");
             allSeedsEqual = b
                     .comment("Each seed has an equal chance to drop (grass drops and via hoes)")
@@ -453,7 +458,7 @@ public final class Config {
                     .define("removeHoeRecipes", true), false);
             hoeToolDamageMultiplier = b
                     .comment("Multiplier on tool damage taken when a hoe is used ('modifyHoeUse' must be true)")
-                    .defineInRange("hoeToolDamageMultiplier", 5, 1, Integer.MAX_VALUE);
+                    .defineInRange("hoeToolDamageMultiplier", 5, 1, 100);
             seedChance = preset(b
                     .comment("Percent chance for a seed to drop from hoe use on normal difficulty ('modifyHoeUse' must be true)")
                     .defineInRange("seedChance", 20, 0, 100), 25);
@@ -465,49 +470,49 @@ public final class Config {
             b.comment("Delays for various food-related activities").push("delays");
             noSunlightRegrowthMultiplier = preset(b
                     .comment("Multiplier on crop growth time without sunlight (1 to disable, 0 to make crops only grow in sunlight)")
-                    .defineInRange("noSunlightRegrowthMultiplier", 2.0D, 0.0D, Double.MAX_VALUE), 1.0D);
+                    .defineInRange("noSunlightRegrowthMultiplier", 2.0D, 0.0D, 100.0D), 1.0D);
             wrongBiomeRegrowthMultiplier = preset(b
                     .comment("Multiplier on crop growth time (except sugarcane) in the wrong biome (1 to disable, 0 to only grow in the correct biome)")
-                    .defineInRange("wrongBiomeRegrowthMultiplier", 2.0D, 0.0D, Double.MAX_VALUE), 1.0D);
+                    .defineInRange("wrongBiomeRegrowthMultiplier", 2.0D, 0.0D, 100.0D), 1.0D);
             wrongBiomeRegrowthMultiplierSugarcane = preset(b
                     .comment("Multiplier on sugarcane growth time in the wrong biome (1 to disable, 0 to only grow in the correct biome)")
-                    .defineInRange("wrongBiomeRegrowthMultiplierSugarcane", 2.0D, 0.0D, Double.MAX_VALUE), 1.0D);
+                    .defineInRange("wrongBiomeRegrowthMultiplierSugarcane", 2.0D, 0.0D, 100.0D), 1.0D);
             flowerRegrowthMultiplier = b
                     .comment("Multiplier on the time it takes a flower crop to grow")
-                    .defineInRange("flowerRegrowthMultiplier", 1.0D, 0.0D, Double.MAX_VALUE);
+                    .defineInRange("flowerRegrowthMultiplier", 1.0D, 0.0D, 100.0D);
             cropRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes a non-tree crop to grow")
-                    .defineInRange("cropRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("cropRegrowthMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             cactusRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes cactus to grow")
-                    .defineInRange("cactusRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("cactusRegrowthMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             cocoaRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes cocoa to grow")
-                    .defineInRange("cocoaRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("cocoaRegrowthMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             sugarcaneRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes sugarcane to grow")
-                    .defineInRange("sugarcaneRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("sugarcaneRegrowthMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             treeCropRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes a tree crop (fruit on a log/leaf block) to grow")
-                    .defineInRange("treeCropRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("treeCropRegrowthMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             saplingRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes a sapling to grow into a tree")
-                    .defineInRange("saplingRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("saplingRegrowthMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             netherWartRegrowthMultiplier = preset(b
                     .comment("Multiplier on the time it takes nether wart to grow")
-                    .defineInRange("netherWartRegrowthMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("netherWartRegrowthMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             eggTimeoutMultiplier = preset(b
                     .comment("Multiplier applied to the delay between chicken egg laying")
-                    .defineInRange("eggTimeoutMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("eggTimeoutMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             breedingTimeoutMultiplier = preset(b
                     .comment("Multiplier applied to the delay between breeding entities")
-                    .defineInRange("breedingTimeoutMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("breedingTimeoutMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             childDurationMultiplier = preset(b
                     .comment("Multiplier applied to the delay before children become adults")
-                    .defineInRange("childDurationMultiplier", 4.0D, 0.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("childDurationMultiplier", 4.0D, 0.0D, 100.0D), 2.0D);
             milkedTimeout = b
                     .comment("Delay (in minutes) after milking a cow before it can be milked again (0 to disable)")
-                    .defineInRange("milkedTimeout", 20, 0, Integer.MAX_VALUE);
+                    .defineInRange("milkedTimeout", 20, 0, 1440);
             b.pop();
 
             b.comment("Options related to drops from crops").push("harvesting");
@@ -522,28 +527,28 @@ public final class Config {
                     .define("modifyCropDropsBreak", true);
             seedsPerHarvestRightClickMin = b
                     .comment("Minimum seeds from harvesting a non-tree crop with right click")
-                    .defineInRange("seedsPerHarvestRightClickMin", 0, 0, Integer.MAX_VALUE);
+                    .defineInRange("seedsPerHarvestRightClickMin", 0, 0, 64);
             seedsPerHarvestRightClickMax = b
                     .comment("Maximum seeds from harvesting a non-tree crop with right click")
-                    .defineInRange("seedsPerHarvestRightClickMax", 0, 0, Integer.MAX_VALUE);
+                    .defineInRange("seedsPerHarvestRightClickMax", 0, 0, 64);
             seedsPerHarvestBreakMin = b
                     .comment("Minimum seeds from harvesting a non-tree crop by breaking it")
-                    .defineInRange("seedsPerHarvestBreakMin", 0, 0, Integer.MAX_VALUE);
+                    .defineInRange("seedsPerHarvestBreakMin", 0, 0, 64);
             seedsPerHarvestBreakMax = b
                     .comment("Maximum seeds from harvesting a non-tree crop by breaking it")
-                    .defineInRange("seedsPerHarvestBreakMax", 0, 0, Integer.MAX_VALUE);
+                    .defineInRange("seedsPerHarvestBreakMax", 0, 0, 64);
             producePerHarvestRightClickMin = b
                     .comment("Minimum produce from harvesting a non-tree crop with right click")
-                    .defineInRange("producePerHarvestRightClickMin", 2, 0, Integer.MAX_VALUE);
+                    .defineInRange("producePerHarvestRightClickMin", 2, 0, 64);
             producePerHarvestRightClickMax = b
                     .comment("Maximum produce from harvesting a non-tree crop with right click")
-                    .defineInRange("producePerHarvestRightClickMax", 4, 0, Integer.MAX_VALUE);
+                    .defineInRange("producePerHarvestRightClickMax", 4, 0, 64);
             producePerHarvestBreakMin = b
                     .comment("Minimum produce from harvesting a non-tree crop by breaking it")
-                    .defineInRange("producePerHarvestBreakMin", 2, 0, Integer.MAX_VALUE);
+                    .defineInRange("producePerHarvestBreakMin", 2, 0, 64);
             producePerHarvestBreakMax = b
                     .comment("Maximum produce from harvesting a non-tree crop by breaking it")
-                    .defineInRange("producePerHarvestBreakMax", 4, 0, Integer.MAX_VALUE);
+                    .defineInRange("producePerHarvestBreakMax", 4, 0, 64);
             bonemealEffectiveness = preset(b
                     .comment("Multiplier on the effectiveness of bonemeal; the smaller this is, the more often bonemeal fails. Set to 0 to disable bonemeal completely.")
                     .defineInRange("bonemealEffectiveness", 0.5D, 0.0D, 1.0D), 1.0D);
@@ -558,13 +563,15 @@ public final class Config {
                     .define("addCustomVillageField", true);
             fieldNormalWeight = b
                     .comment("Weighted chance for the custom field to contain 'normal' crops")
-                    .defineInRange("fieldNormalWeight", 70, 0, Integer.MAX_VALUE);
+                    .defineInRange("fieldNormalWeight", 70, 0, 1000);
             fieldReedWeight = b
                     .comment("Weighted chance for the custom field to contain reeds")
-                    .defineInRange("fieldReedWeight", 10, 0, Integer.MAX_VALUE);
+                    .defineInRange("fieldReedWeight", 10, 0, 1000);
             fieldStemWeight = b
                     .comment("Weighted chance for the custom field to contain pumpkins/melons")
-                    .defineInRange("fieldStemWeight", 10, 0, Integer.MAX_VALUE);
+                    .defineInRange("fieldStemWeight", 10, 0, 1000);
+            b.pop();
+
             b.pop();
 
             b.comment("Options to scale the difficulty of certain elements based on game difficulty").push("difficulty scaling");
@@ -606,33 +613,32 @@ public final class Config {
                     .defineInRange("foodStackSizeMultiplier", 1, 1, 64);
             foodHungerDivider = preset(b
                     .comment("Food values not manually set (see 'useHOFoodValues') have their hunger value divided by this ('modifyFoodValues' must be true)")
-                    .defineInRange("foodHungerDivider", 4.0D, 1.0D, Double.MAX_VALUE), 2.0D);
+                    .defineInRange("foodHungerDivider", 4.0D, 1.0D, 100.0D), 2.0D);
             foodSaturationDivider = b
                     .comment("Food values not manually set have their saturation modifier divided by this.",
                             "Note: applied after 'foodHungerToSaturationDivider'")
-                    .defineInRange("foodSaturationDivider", 1.0D, 1.0D, Double.MAX_VALUE);
+                    .defineInRange("foodSaturationDivider", 1.0D, 1.0D, 100.0D);
             foodHungerToSaturationDivider = b
                     .comment("Food values not manually set have their saturation modifier set to <modified hunger> divided by this.",
                             "Set to 0 to keep the original saturation modifier instead.")
-                    .defineInRange("foodHungerToSaturationDivider", 20.0D, 0.0D, Double.MAX_VALUE);
+                    .defineInRange("foodHungerToSaturationDivider", 20.0D, 0.0D, 100.0D);
             addWellFedEffect = b
                     .comment("Adds a 'well fed' effect that gives slight health regen")
                     .define("addWellFedEffect", true);
             wellFedDurationMultiplier = b
                     .comment("The base duration (in ticks) for the well fed effect is (hunger_value * 100)^1.2, multiplied by this value")
-                    .defineInRange("wellFedDurationMultiplier", 1.0D, 0.0D, Double.MAX_VALUE);
+                    .defineInRange("wellFedDurationMultiplier", 1.0D, 0.0D, 100.0D);
             wellFedEffectiveness = b
                     .comment("How much faster the well fed effect makes health regen. 0.25 means health regens 25% faster; 1 means maximum speed.")
                     .defineInRange("wellFedEffectiveness", 0.25D, 0.0D, 1.0D);
-            foodValueBlacklist = b
+            foodValueBlacklist = preset(b
                     .comment("Items whose food values Hunger Overhauled must not touch.",
                             "Accepts item ids (modid:item) and item tags (#modid:tag).")
                     .defineList("foodValueBlacklist", List.of("minecraft:golden_apple",
                             "minecraft:enchanted_golden_apple",
                             "minecraft:golden_carrot",
                             "minecraft:chorus_fruit",
-                            "minecraft:suspicious_stew"), o -> o instanceof String);
-            b.pop();
+                            "minecraft:suspicious_stew"), o -> o instanceof String), List.of());
 
             b.comment("Adding food to villager trades and chest loot").push("trades and loot");
             addTradesButcher = preset(b
@@ -663,6 +669,9 @@ public final class Config {
                             "so a real seed item is required to start those crops. The tag ships empty.")
                     .define("foodsUnplantable", true);
             b.pop();
+            b.pop();
+
+            b.comment("The player: hunger, low-stat penalties and healing").push("player");
 
             b.comment("Options related to hunger").push("hunger");
             constantHungerLoss = preset(b
@@ -670,10 +679,15 @@ public final class Config {
                     .define("constantHungerLoss", true), false);
             walkExhaustionPerBlock = b
                     .comment("Exhaustion gained per block walked (old vanilla was 0.01, removed in 1.11, set to 0 to disable)")
-                    .defineInRange("walkExhaustionPerBlock", 0.01D, 0.0D, Double.MAX_VALUE);
+                    .defineInRange("walkExhaustionPerBlock", 0.01D, 0.0D, 1.0D);
+            restoreOldExhaustionCosts = b
+                    .comment("Restore the pre-1.9 exhaustion costs on top of vanilla's nerfed ones:",
+                            "jumps 0.2 (sprint jumps 0.8), melee hits and damage taken 0.3,",
+                            "mining 0.025, swimming 0.015, hunger effect 0.025/tick")
+                    .define("restoreOldExhaustionCosts", true);
             damageOnStarve = preset(b
                     .comment("Amount of damage you take when hunger hits zero (vanilla is 1)")
-                    .defineInRange("damageOnStarve", 200, 1, Integer.MAX_VALUE), 2);
+                    .defineInRange("damageOnStarve", 200, 1, 1000), 2);
             enableRespawnHunger = b
                     .comment("Enable setting hunger after respawning (see 'respawnHungerValue')")
                     .define("enableRespawnHunger", true);
@@ -688,7 +702,7 @@ public final class Config {
                     .define("disableHealingHungerDrain", true);
             hungerLossRatePercentage = preset(b
                     .comment("Speed up or slow down the rate that hunger drops (set to 0 to disable hunger loss entirely)")
-                    .defineInRange("hungerLossRatePercentage", 400.0D / 3.0D, 0.0D, Double.MAX_VALUE), 100.0D);
+                    .defineInRange("hungerLossRatePercentage", 133.0D, 0.0D, 10000.0D), 100.0D);
             b.pop();
 
             b.comment("Options for how to handle the player getting low health/hunger").push("low stats");
@@ -717,17 +731,21 @@ public final class Config {
                     .define("foodRegensHealth", false);
             foodHealDivider = b
                     .comment("Health food restores is the food value divided by this number ('foodRegensHealth' must be true)")
-                    .defineInRange("foodHealDivider", 4, 1, Integer.MAX_VALUE);
+                    .defineInRange("foodHealDivider", 4, 1, 100);
             healthRegenRatePercentage = b
                     .comment("Speed up or slow down the rate that health regenerates (0 to disable regen)")
-                    .defineInRange("healthRegenRatePercentage", 100, 0, Integer.MAX_VALUE);
+                    .defineInRange("healthRegenRatePercentage", 100, 0, 10000);
             modifyRegenRateOnLowHealth = b
                     .comment("The lower your health the longer it takes to regen")
                     .define("modifyRegenRateOnLowHealth", true);
             lowHealthRegenRateModifier = b
                     .comment("Strength of 'modifyRegenRateOnLowHealth' (lower = less effect)")
-                    .defineInRange("lowHealthRegenRateModifier", 5, 0, Integer.MAX_VALUE);
+                    .defineInRange("lowHealthRegenRateModifier", 5, 0, 100);
             b.pop();
+
+            b.pop();
+
+            b.comment("Everything else").push("misc");
 
             b.comment("Recipe removal").push("recipes");
             removedRecipes = b
@@ -752,15 +770,17 @@ public final class Config {
                     .define("enableHealingAxeRecipe", false);
             b.pop();
 
+            b.pop();
+
             b.comment("Settings borrowed from GregTech: New Horizons").push("GTNH");
             setToNewHorizonsDefaults = b
                     .comment("Rewrites config values to gtnh defaults")
                     .define("setToNewHorizonsDefaults", false);
-            explodeInhumaneKills = b
+            explodeInhumaneKills = preset(b
                     .comment("Animals have a small chance to explode when not slaughtered humanely (with a knife!).",
                             "Anything in the #hungeroverhauled:humane_slaughter_tools tag counts as a knife,",
                             "which already covers Farmer's Delight knives and everything that copies them.")
-                    .define("explodeInhumaneKills", false);
+                    .define("explodeInhumaneKills", false), true);
             inhumaneKillChance = b
                     .comment("Chance for an animal killed without a knife to go off ('explodeInhumaneKills' must be true)")
                     .defineInRange("inhumaneKillChance", 0.05D, 0.0D, 1.0D);
@@ -794,16 +814,16 @@ public final class Config {
                     .define("addGuiText", true);
             healthTextOffsetX = b
                     .comment("Moves the health text left/right (negative = left)")
-                    .defineInRange("healthTextOffsetX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    .defineInRange("healthTextOffsetX", 0, -10000, 10000);
             healthTextOffsetY = b
                     .comment("Moves the health text up/down (negative = up)")
-                    .defineInRange("healthTextOffsetY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    .defineInRange("healthTextOffsetY", 0, -10000, 10000);
             hungerTextOffsetX = b
                     .comment("Moves the hunger text left/right (negative = left)")
-                    .defineInRange("hungerTextOffsetX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    .defineInRange("hungerTextOffsetX", 0, -10000, 10000);
             hungerTextOffsetY = b
                     .comment("Moves the hunger text up/down (negative = up)")
-                    .defineInRange("hungerTextOffsetY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    .defineInRange("hungerTextOffsetY", 0, -10000, 10000);
             addFoodTooltips = b
                     .comment("Add tooltips to food items hinting at their food value")
                     .define("addFoodTooltips", true);

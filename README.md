@@ -15,6 +15,7 @@ Requires [AppleSkin](https://www.curseforge.com/minecraft/mc-mods/appleskin) on 
 - Faster hunger drain, scaling with difficulty
 - Hunger drains on peaceful too
 - Walking costs hunger again, like it did before vanilla 1.11
+- Jumping, mining, fighting and swimming cost what they did before vanilla 1.9 nerfed them
 - Optional: turn off vanilla's fast regen (added back in 1.9) 
 - Configurable starvation damage (default: starving to zero kills you)
 - Slow, difficulty-scaled health regen that gets slower the more hurt you are
@@ -51,7 +52,8 @@ Requires [AppleSkin](https://www.curseforge.com/minecraft/mc-mods/appleskin) on 
 ## Config
 
 `config/hungeroverhauled-common.toml` and `config/hungeroverhauled-client.toml`. Option names match the 1.12 config, so an
-old `HungerOverhaul.cfg` is a usable reference for what to set.
+old `HungerOverhaul.cfg` is a usable reference for what to set. Sections are grouped under `farming`, `food`, `player`,
+`difficulty scaling`, `misc` and `GTNH`.
 
 ### Per-mod food values and growth
 
