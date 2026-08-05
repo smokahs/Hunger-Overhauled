@@ -51,8 +51,9 @@ public final class HungerLogic {
         boolean naturalRegen = level.getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION);
         int tickTimer = access.hungeroverhauled$getTickTimer();
 
-        if (naturalRegen && data.getSaturationLevel() > 0.0F && player.isHurt() && data.getFoodLevel() >= 20) {
-            // vanilla fast regen, left alone
+        if (!Config.disableFastRegen && naturalRegen && data.getSaturationLevel() > 0.0F
+                && player.isHurt() && data.getFoodLevel() >= 20) {
+            // vanilla fast regen, gtnh preset turns this off
             ++tickTimer;
 
             if (tickTimer >= 10) {

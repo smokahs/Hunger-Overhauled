@@ -50,20 +50,23 @@ public final class StatusOverlay {
         }
 
         Font font = minecraft.font;
-        int y = screenHeight - 49;
+        int baseY = screenHeight - 49;
 
         String health = healthKey(player.getHealth() / player.getMaxHealth());
 
         if (health != null) {
             graphics.drawString(font, Component.translatable(PREFIX + health).withStyle(healthColor(health)),
-                    screenWidth / 2 - 91, y, 0xFFFFFF, true);
+                    screenWidth / 2 - 91 + Config.healthTextOffsetX, baseY + Config.healthTextOffsetY,
+                    0xFFFFFF, true);
         }
 
         String hunger = hungerKey(player.getFoodData().getFoodLevel());
 
         if (hunger != null) {
             Component text = Component.translatable(PREFIX + hunger).withStyle(hungerColor(hunger));
-            graphics.drawString(font, text, screenWidth / 2 + 91 - font.width(text), y, 0xFFFFFF, true);
+            graphics.drawString(font, text,
+                    screenWidth / 2 + 91 - font.width(text) + Config.hungerTextOffsetX,
+                    baseY + Config.hungerTextOffsetY, 0xFFFFFF, true);
         }
     }
 

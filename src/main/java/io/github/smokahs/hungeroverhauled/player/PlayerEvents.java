@@ -1,5 +1,8 @@
 package io.github.smokahs.hungeroverhauled.player;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,6 +26,9 @@ public final class PlayerEvents {
     // the 1.12 version stored a countdown in NBT to run this every 10 ticks
     private static final int CHECK_INTERVAL = 10;
 
+    // where each player's walk distance was at the last check
+    private static final Map<Player, Float> LAST_WALK_DIST = new WeakHashMap<>();
+
     private PlayerEvents() {
     }
 
@@ -45,6 +51,8 @@ public final class PlayerEvents {
         if (Config.constantHungerLoss) {
             player.causeFoodExhaustion(0.01F);
         }
+
+        applyWalkExhaustion(player);
 
         if (!Config.addLowStatEffects) {
             return;
@@ -70,6 +78,26 @@ public final class PlayerEvents {
         if ((Config.addLowHungerNausea && foodLevel <= 1) || (Config.addLowHealthNausea && healthPercent <= 0.05F)) {
             add(player, MobEffects.CONFUSION, 79, 0);
         }
+    }
+
+    // walking was free since vanilla 1.11, this brings back the old cost
+    private static void applyWalkExhaustion(Player player) {
+        float walked = player.walkDist;
+        Float last = LAST_WALK_DIST.put(player, walked);
+
+        if (last == null || Config.walkExhaustionPerBlock <= 0.0F) {
+            return;
+        }
+
+        float delta = walked - last;
+
+        // sprinting and swimming already cost hunger, riding and flying are free
+        if (delta <= 0.0F || !player.onGround() || player.isSprinting() || player.isSwimming()
+                || player.isPassenger() || player.getAbilities().flying) {
+            return;
+        }
+
+        player.causeFoodExhaustion(delta * Config.walkExhaustionPerBlock);
     }
 
     private static void applySlowness(Player player, float healthPercent, int foodLevel, int scale) {

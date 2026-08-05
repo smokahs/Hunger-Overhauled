@@ -14,12 +14,15 @@ Requires [AppleSkin](https://www.curseforge.com/minecraft/mc-mods/appleskin) on 
 **Hunger and health**
 - Faster hunger drain, scaling with difficulty
 - Hunger drains on peaceful too
+- Walking costs hunger again, like it did before vanilla 1.11
+- Optional: turn off vanilla's fast regen (added back in 1.9) 
 - Configurable starvation damage (default: starving to zero kills you)
 - Slow, difficulty-scaled health regen that gets slower the more hurt you are
 - Minimum hunger to heal, healing hunger drain toggle
 - Hunger set on respawn, scaled by difficulty
 - Nausea / slowness / weakness / mining fatigue at low health or hunger
 - New UI popups "Hurt / Injured / Dying" and "Peckish / Hungry / Starving" to aid players and add an rpg-like feel.
+- Both popups can be repositioned with x/y offsets in the client config
 
 **Food**
 - Food values divided down, with an explicit table for vanilla items

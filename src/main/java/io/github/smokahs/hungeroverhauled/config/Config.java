@@ -115,6 +115,7 @@ public final class Config {
 
     // hunger
     public static boolean constantHungerLoss;
+    public static float walkExhaustionPerBlock;
     public static int damageOnStarve;
     public static boolean enableRespawnHunger;
     public static int respawnHungerValue;
@@ -135,6 +136,7 @@ public final class Config {
 
     // health
     public static int minHungerToHeal;
+    public static boolean disableFastRegen;
     public static boolean foodRegensHealth;
     public static int foodHealDivider;
     public static int healthRegenRatePercentage;
@@ -158,6 +160,10 @@ public final class Config {
 
     // client
     public static boolean addGuiText;
+    public static int healthTextOffsetX;
+    public static int healthTextOffsetY;
+    public static int hungerTextOffsetX;
+    public static int hungerTextOffsetY;
     public static boolean addFoodTooltips;
     public static boolean addGrowsBestInTooltips;
 
@@ -256,6 +262,7 @@ public final class Config {
         foodsUnplantable = c.foodsUnplantable.get();
 
         constantHungerLoss = c.constantHungerLoss.get();
+        walkExhaustionPerBlock = c.walkExhaustionPerBlock.get().floatValue();
         damageOnStarve = c.damageOnStarve.get();
         enableRespawnHunger = c.enableRespawnHunger.get();
         respawnHungerValue = c.respawnHungerValue.get();
@@ -274,6 +281,7 @@ public final class Config {
         addLowHungerMiningSlowdown = c.addLowHungerMiningSlowdown.get();
 
         minHungerToHeal = c.minHungerToHeal.get();
+        disableFastRegen = c.disableFastRegen.get();
         foodRegensHealth = c.foodRegensHealth.get();
         foodHealDivider = c.foodHealDivider.get();
         healthRegenRatePercentage = c.healthRegenRatePercentage.get();
@@ -295,6 +303,10 @@ public final class Config {
 
     public static void bakeClient() {
         addGuiText = CLIENT.addGuiText.get();
+        healthTextOffsetX = CLIENT.healthTextOffsetX.get();
+        healthTextOffsetY = CLIENT.healthTextOffsetY.get();
+        hungerTextOffsetX = CLIENT.hungerTextOffsetX.get();
+        hungerTextOffsetY = CLIENT.hungerTextOffsetY.get();
         addFoodTooltips = CLIENT.addFoodTooltips.get();
         addGrowsBestInTooltips = CLIENT.addGrowsBestInTooltips.get();
     }
@@ -382,6 +394,7 @@ public final class Config {
 
         // hunger
         final ForgeConfigSpec.BooleanValue constantHungerLoss;
+        final ForgeConfigSpec.DoubleValue walkExhaustionPerBlock;
         final ForgeConfigSpec.IntValue damageOnStarve;
         final ForgeConfigSpec.BooleanValue enableRespawnHunger;
         final ForgeConfigSpec.IntValue respawnHungerValue;
@@ -402,6 +415,7 @@ public final class Config {
 
         // health
         final ForgeConfigSpec.IntValue minHungerToHeal;
+        final ForgeConfigSpec.BooleanValue disableFastRegen;
         final ForgeConfigSpec.BooleanValue foodRegensHealth;
         final ForgeConfigSpec.IntValue foodHealDivider;
         final ForgeConfigSpec.IntValue healthRegenRatePercentage;
@@ -654,6 +668,9 @@ public final class Config {
             constantHungerLoss = preset(b
                     .comment("You lose hunger (very slowly) at all times")
                     .define("constantHungerLoss", true), false);
+            walkExhaustionPerBlock = b
+                    .comment("Exhaustion gained per block walked (old vanilla was 0.01, removed in 1.11, set to 0 to disable)")
+                    .defineInRange("walkExhaustionPerBlock", 0.01D, 0.0D, Double.MAX_VALUE);
             damageOnStarve = preset(b
                     .comment("Amount of damage you take when hunger hits zero (vanilla is 1)")
                     .defineInRange("damageOnStarve", 200, 1, Integer.MAX_VALUE), 2);
@@ -692,6 +709,9 @@ public final class Config {
             minHungerToHeal = preset(b
                     .comment("Minimum hunger level before healing starts (vanilla is 18)")
                     .defineInRange("minHungerToHeal", 7, 0, 20), 8);
+            disableFastRegen = preset(b
+                    .comment("Disable the fast saturation-based regen added in vanilla 1.9 (1.7.10 era had no such thing)")
+                    .define("disableFastRegen", false), true);
             foodRegensHealth = b
                     .comment("Eating food regenerates health")
                     .define("foodRegensHealth", false);
@@ -760,6 +780,10 @@ public final class Config {
     public static final class Client {
 
         final ForgeConfigSpec.BooleanValue addGuiText;
+        final ForgeConfigSpec.IntValue healthTextOffsetX;
+        final ForgeConfigSpec.IntValue healthTextOffsetY;
+        final ForgeConfigSpec.IntValue hungerTextOffsetX;
+        final ForgeConfigSpec.IntValue hungerTextOffsetY;
         final ForgeConfigSpec.BooleanValue addFoodTooltips;
         final ForgeConfigSpec.BooleanValue addGrowsBestInTooltips;
 
@@ -768,6 +792,18 @@ public final class Config {
             addGuiText = b
                     .comment("Shows onscreen text when hunger/health is low")
                     .define("addGuiText", true);
+            healthTextOffsetX = b
+                    .comment("Moves the health text left/right (negative = left)")
+                    .defineInRange("healthTextOffsetX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            healthTextOffsetY = b
+                    .comment("Moves the health text up/down (negative = up)")
+                    .defineInRange("healthTextOffsetY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            hungerTextOffsetX = b
+                    .comment("Moves the hunger text left/right (negative = left)")
+                    .defineInRange("hungerTextOffsetX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            hungerTextOffsetY = b
+                    .comment("Moves the hunger text up/down (negative = up)")
+                    .defineInRange("hungerTextOffsetY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
             addFoodTooltips = b
                     .comment("Add tooltips to food items hinting at their food value")
                     .define("addFoodTooltips", true);

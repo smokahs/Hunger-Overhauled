@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.2
+1. Walking costs hunger again
+    - Vanilla removed walking exhaustion in 1.11; this brings back the old 0.01 per block cost
+    - New `walkExhaustionPerBlock` option in the `hunger` section (default 0.01, set to 0 to disable)
+2. Fast saturation regen can be turned off
+    - Vanilla 1.9 added free fast healing at a full hunger bar; 1.7.10 never had it
+    - New `disableFastRegen` option in the `health` section (default off, GTNH preset turns it on)
+3. The onscreen status text can be moved
+    - New client options: `healthTextOffsetX/Y` and `hungerTextOffsetX/Y`, so each text moves on its own
+
 ## v2.1
 1. Added the **Healing Axe**, ported from the 1.7.10 Extra Utilities / New Horizons era
     - Left click a mob to heal it 4 health for 3.5 of your own, or hit an undead one for 16
