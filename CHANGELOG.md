@@ -1,5 +1,8 @@
 # Changelog
 
+## v2.3
+1. Updated Hunger/Health overlays to account for bubbles/armor bar
+
 ## v2.2
 1. Walking costs hunger again
     - Vanilla removed walking exhaustion in 1.11; this brings back the old 0.01 per block cost
