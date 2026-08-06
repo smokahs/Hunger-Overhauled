@@ -29,7 +29,7 @@ public final class StatusOverlay {
 
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerAbove(VanillaGuiOverlay.FOOD_LEVEL.id(), "status_text", StatusOverlay::render);
+        event.registerAbove(VanillaGuiOverlay.AIR_LEVEL.id(), "status_text", StatusOverlay::render);
     }
 
     private static void render(ForgeGui gui, GuiGraphics graphics, float partialTick,
@@ -50,13 +50,14 @@ public final class StatusOverlay {
         }
 
         Font font = minecraft.font;
-        int baseY = screenHeight - 49;
+        int leftY = screenHeight - gui.leftHeight;
+        int rightY = screenHeight - gui.rightHeight;
 
         String health = healthKey(player.getHealth() / player.getMaxHealth());
 
         if (health != null) {
             graphics.drawString(font, Component.translatable(PREFIX + health).withStyle(healthColor(health)),
-                    screenWidth / 2 - 91 + Config.healthTextOffsetX, baseY + Config.healthTextOffsetY,
+                    screenWidth / 2 - 91 + Config.healthTextOffsetX, leftY + Config.healthTextOffsetY,
                     0xFFFFFF, true);
         }
 
@@ -66,7 +67,7 @@ public final class StatusOverlay {
             Component text = Component.translatable(PREFIX + hunger).withStyle(hungerColor(hunger));
             graphics.drawString(font, text,
                     screenWidth / 2 + 91 - font.width(text) + Config.hungerTextOffsetX,
-                    baseY + Config.hungerTextOffsetY, 0xFFFFFF, true);
+                    rightY + Config.hungerTextOffsetY, 0xFFFFFF, true);
         }
     }
 
